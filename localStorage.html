@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <main>
+      <form id="studentForm">
+        <input type="text" placeholder="Student name" name="name" required />
+        <input type="number" placeholder="Student age" name="age" required />
+        <input type="number" placeholder="Student roll" name="roll" required />
+        <button>Add student</button>
+      </form>
+      <div class="students"></div>
+    </main>
+    <script>
+      //Dom elements
+
+      const StudentForm = document.getElementById("studentForm");
+      const studentContainer = document.querySelector(".students");
+      const nameInput = StudentForm['name'];
+      const ageInput = StudentForm['age'];
+      const rollInput = StudentForm['roll'];
+
+      const students =JSON.parse(localStorage.getItem('students')) || [];
+
+
+      const addStds = (name, age, roll) => {
+        students.push({
+          name,
+          age,
+          roll
+        })
+        localStorage.setItem('students',JSON.stringify(students))
+        return {name, age, roll}
+
+      };
+
+
+      const createStdElements = ({name, age, roll}) => {
+        //create elements
+        const studentDiv = document.createElement("div");
+        const studentName = document.createElement("h3");
+        const studentAge = document.createElement("p");
+        const studentRoll = document.createElement("p");
+        const heading =document.createElement("h12");
+
+        //Fill the content 
+        heading.innerText = " ----studend details ---- "
+        studentName.innerText = "Name : "+ name;
+        studentAge.innerText = " Age : "+ age;
+        studentRoll.innerText = "Roll No : "+ roll;
+
+        studentDiv.append(heading, studentName, studentAge, studentRoll);
+
+        studentContainer.appendChild(studentDiv);
+      }
+
+      students.forEach(createStdElements)
+
+      StudentForm.onsubmit = eve =>{
+        eve.preventDefault();
+        const newStd =addStds(nameInput.value,ageInput.value,rollInput.value);
+        createStdElements(newStd);
+
+        nameInput.value="";
+        ageInput.value="";
+        rollInput.value="";
+
+      };
+    </script>
+  </body>
+</html>
